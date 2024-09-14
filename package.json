@@ -6,7 +6,8 @@
     "start": "set NODE_OPTIONS=--openssl-legacy-provider && ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "postinstall": "ngcc --create-ivy-entry-points"
   },
   "private": true,
   "dependencies": {
