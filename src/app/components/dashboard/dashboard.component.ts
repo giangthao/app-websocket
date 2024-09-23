@@ -1,87 +1,82 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { WebSocketService } from 'src/app/services/websocket.service';
-import { Subject } from 'rxjs';
 import { RandomValueService } from 'src/app/services/random-value.service';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
-export class DashboardComponent implements OnInit {
-  private stop$ = new Subject<void>(); 
+export class DashboardComponent implements OnInit, OnDestroy {
   public interval: number = 1 * 60 * 5;
   valueReponse: string[] = [];
+  messages: any[] = [];
 
-  constructor(private ws: WebSocketService, private randomValueService: RandomValueService) {
-    this.callWebSocket();
+  formDashboard: FormGroup;
+
+  constructor(
+    private ws: WebSocketService,
+    private randomValueService: RandomValueService
+  ) {
+    //.callWebSocket();
+    this.formDashboard = new FormGroup({
+      network: new FormControl('VIETTEL'),
+    });
   }
 
   ngOnInit(): void {
-     console.log('oninit')
+    console.log('oninit');
     // this.callPolling();
+    this.ws.connect({reconnect: false}, {network: this.formDashboard.get('network')?.value,
+      from: '2021-01-01',
+      to: '2021-12-31',});
+    this.ws.messages$.subscribe(
+      (message) => {
+        if (message.data) {
+          this.messages = message.data;
+        } else {
+          this.messages = [];
+        }
+
+        console.log('Received message:', message);
+      },
+      (error) => {
+        console.log('Error log in component: ', error)
+      }
+    );
+
+    this.formDashboard.valueChanges.subscribe((value) => {
+      this.ws.sendMessage({
+        network: value.network,
+        from: '2021-01-01',
+        to: '2021-12-31',
+      });
+    });
+
+    this.ws.sendMessage({
+      network: this.formDashboard.get('network')?.value,
+      from: '2021-01-01',
+      to: '2021-12-31',
+    });
   }
 
-  updateInterval(interval: number) {
-    this.interval = interval;
-    this.ws.updateInterval(interval);
+  ngOnDestroy(): void {
+    this.ws.closeConnection();
   }
 
   callPolling() {
     const valueDTO = {
-      interval: this.interval
-   }
+      interval: this.interval,
+    };
 
-   this.randomValueService.startPolling(this.interval, valueDTO).subscribe(
-     (res) => {
-       this.valueReponse.push(res.randomValue);
-     },
-     (error) => {
-       console.log(error)
-     }
-   )
-  }
-
-  callWebSocket() {
-    // this.ws.webSocket$
-    //   .pipe(
-    //     catchError((error) => {
-    //       this.interval = 1;
-    //       return throwError(() => new Error(error));
-    //     }),
-    //     retryWhen((errors) =>
-    //       errors.pipe(
-    //         concatMap(
-    //           (error, index) =>
-    //             index < 3 // Retry up to 3 times
-    //               ? timer(5000) // Delay of 5 seconds before the next retry
-    //               : throwError(() => new Error(error)) // Throw error if retries exceeded
-    //         )
-    //       )
-    //     ),
-    //     takeUntil(this.stop$) // Define stop$ as an Observable for completion logic
-    //   )
-    //   .subscribe((value: string) => {
-    //     this.valueReponse.push(value);
-    //   });
-
-      this.ws.updateInterval(this.interval);
-      this.ws.webSocket$.subscribe({
-        next: (res) => {
-          console.log('Nhận dữ liệu từ WebSocket:', res);
-          this.valueReponse.push(res);
-        },
-        error: (err) => {
-          console.error('WebSocket error:', err);
-        },
-        complete: () => {
-          console.log('WebSocket kết thúc.');
-        }
-      });
-  }
-
- 
-  stop() {
-    this.stop$.next();  // to stop the observable stream, emit a value to stop$:
+    this.randomValueService.startPolling(this.interval, valueDTO).subscribe(
+      (res) => {
+        this.valueReponse.push(res.randomValue);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   }
 }

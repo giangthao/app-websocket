@@ -1,26 +1,17 @@
 <main class="main">
   <h1>Dashboard</h1>
-  <div style="display: flex; gap: 8px; flex-wrap: wrap;" *ngIf="valueReponse.length > 0">
-    <div style="padding: 8px; border-radius: 4px; background-color: #ddd;" *ngFor="let value of valueReponse">{{ value }}</div>
+  <div style="display: flex; gap: 8px; flex-wrap: wrap;" *ngIf="messages.length > 0">
+    <div style="padding: 8px; border-radius: 4px; background-color: #ddd;" *ngFor="let value of messages">{{value.code }}</div>
   </div>
 
-  <div>
+  <form [formGroup]="formDashboard">
     <label>
       <input
-        type="radio"
-        (change)="updateInterval(1)"
+        type="text"
+        formControlName="network"
         [checked]="interval === 1"
       />
-      <div class="interval-option">1s</div>
+      <div class="interval-option">Network</div>
     </label>
-    <br />
-    <label>
-        <input
-          type="radio"
-          (change)="updateInterval(3)"
-          [checked]="interval === 3"
-        />
-        <div class="interval-option">3s</div>
-      </label>
-  </div>
+  </form>
 </main>
