@@ -1,0 +1,10 @@
+.breadcrumb {
+  a {
+    text-decoration: none;
+    padding: 0 6px;
+    color: #696767;
+    &.active {
+      color: #0d0d0e;
+    }
+  }
+}

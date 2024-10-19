@@ -1,13 +1,122 @@
-.topbar{
-    height: 60px;
-    border-bottom: 1px solid #ddd;
+.topbar {
+  height: 60px;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  &__buttons {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 0 24px;
-    &__buttons{
+    gap: 16px;
+
+    button{
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        position: relative;
+
+        img {
+            width: 20px;
+            filter: brightness(0) saturate(100%) invert(77%) sepia(1%) saturate(1751%) hue-rotate(206deg) brightness(83%) contrast(84%);
+        }
+    }
+  }
+
+  &__desc{
+    position: absolute;
+    right: 51px;
+    top: 4px;
+    background-color: #fff;
+    padding: 6px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    font-size: 17px;
+    filter: drop-shadow(0 0 4px rgba(200, 200, 200, 0.7));
+    transition: visibility, opacity;
+    transition-duration: 0.3s;
+    visibility: hidden;
+    opacity: 0;
+    &::before {
+        position: absolute;
+        top: 9px;
+        right: -14px;
+        content: "";
+        border: 7px solid;
+        border-color: transparent transparent transparent #fff  ;
+        border-radius: 4px;
+    }
+  }
+
+  &__buttons button:hover &__desc:not(.hidden){
+    visibility: visible;
+    opacity: 1;
+  }
+
+  &__left {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  &__menu{
+    position: relative;
+  }
+}
+
+.dropdown{
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    transform: translate(0, calc(100% + 8px));
+    min-width: 100px;
+    transition: visibility, opacity;
+    transition-duration: 0.3s;
+    visibility: hidden;
+    opacity: 0;
+
+    &.show{
+        visibility: visible;
+        opacity: 1;
+    }
+
+    &__inner{
+        max-height: 200px;
+        overflow-y: auto;
+        padding: 8px 0;
+        background-color: #fff;
+        box-shadow: 0 0 4px rgba(200, 200, 200, 0.7);
+        border-radius: 4px;
+    }
+
+    &__row{
+        padding: 6px 12px;
+        cursor: pointer;
+        transition: background-color 0.3s;
         display: flex;
         align-items: center;
         gap: 8px;
+        
+        &.active,
+        &:hover{
+            background-color: #ddd;
+        }
+
+        &--icon{
+            border-top: 1px solid #ddd;
+            img{
+                width: 16px;
+            }
+        }
+    }
+
+    &__label{
+        white-space: nowrap;
     }
 }

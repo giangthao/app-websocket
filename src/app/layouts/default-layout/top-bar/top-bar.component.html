@@ -1,7 +1,54 @@
 <header class="topbar">
+  <div class="topbar__left">
     <h1>LI</h1>
-    <div class="topbar__buttons">
-        <button>Language</button>
-        <button>User info</button>
+    <app-breadcrumb></app-breadcrumb>
+  </div>
+  <div class="topbar__buttons">
+    <div
+      appClickOutside
+      (clickOutside)="onLanguageMenuClickOutside()"
+      class="topbar__menu"
+    >
+      <button (click)="toggleLanguageMenu()">
+        <img alt="" src="../../../../assets/images/icons/earth.svg" />
+        <span class="topbar__desc" [class.hidden]="isShowLanguageMenu">Language</span>
+      </button>
+      <!-- Dropdown -->
+      <div class="dropdown" [class.show]="isShowLanguageMenu">
+        <div class="dropdown__inner">
+          <div
+            class="dropdown__row"
+            *ngFor="let item of languages"
+            (click)="currentLang = item.code"
+            onkeydown=""
+            [class.active]="currentLang === item.code"
+          >
+            <span class="dropdown__label">{{ item.label }}</span>
+          </div>
+        </div>
+      </div>
     </div>
+    <div
+      appClickOutside
+      (clickOutside)="onUserClickOutside()"
+      class="topbar__menu"
+    >
+      <button (click)="toggleUserMenu()">
+        <img alt="" src="../../../../assets/images/icons/user.svg" />
+        <span class="topbar__desc" [class.hidden]="isShowUserMenu">User info</span>
+      </button>
+      <!-- Dropdown -->
+      <div class="dropdown" [class.show]="isShowUserMenu">
+        <div class="dropdown__inner">
+          <div class="dropdown__row">
+            <span class="dropdown__label">{{ username }}</span>
+          </div>
+          <div class="dropdown__row dropdown__row--icon">
+            <img alt="" src="../../../../assets/images/icons/logout.svg" />
+            <span class="dropdown__label">Logout</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </header>

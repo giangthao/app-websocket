@@ -74,8 +74,8 @@ export class SideBarComponent implements OnInit {
   }
 
   clickOutsideMenu(event: any) {
-    console.log(event)
-    console.log('click out')
-    this.isOpen = false
+    if(this.isOpen !== null) {
+      this.isOpen = false;
+    }
   }
 }

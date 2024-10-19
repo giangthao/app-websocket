@@ -13,6 +13,8 @@ import { OverviewComponent } from './components/overview/overview.component';
 import { LeaManagementComponent } from './components/lea-management/lea-management.component';
 import { AddLeaComponent } from './components/lea-management/add-lea/add-lea.component';
 import { ClickOutsideDirective } from './directives/click-outside.directive';
+import { BreadcrumbComponent } from './layouts/default-layout/top-bar/breadcrumb/breadcrumb.component';
+import { ListLeaComponent } from './components/lea-management/list-lea/list-lea.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,9 @@ import { ClickOutsideDirective } from './directives/click-outside.directive';
     OverviewComponent,
     LeaManagementComponent,
     AddLeaComponent,
-    ClickOutsideDirective
+    ClickOutsideDirective,
+    BreadcrumbComponent,
+    ListLeaComponent
   ],
   imports: [
     BrowserModule,
