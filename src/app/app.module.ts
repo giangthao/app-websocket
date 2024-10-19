@@ -6,12 +6,25 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { HttpClientModule } from '@angular/common/http';
 import { WebSocketService } from './services/websocket.service';
 import { FormsModule, ReactiveFormsModule  }   from '@angular/forms';
-
+import { TopBarComponent } from './layouts/default-layout/top-bar/top-bar.component';
+import { SideBarComponent } from './layouts/default-layout/side-bar/side-bar.component';
+import { DefaultLayoutComponent } from './layouts/default-layout/default-layout.component';
+import { OverviewComponent } from './components/overview/overview.component';
+import { LeaManagementComponent } from './components/lea-management/lea-management.component';
+import { AddLeaComponent } from './components/lea-management/add-lea/add-lea.component';
+import { ClickOutsideDirective } from './directives/click-outside.directive';
 
 @NgModule({
   declarations: [
     AppComponent,
-    DashboardComponent
+    DashboardComponent,
+    TopBarComponent,
+    SideBarComponent,
+    DefaultLayoutComponent,
+    OverviewComponent,
+    LeaManagementComponent,
+    AddLeaComponent,
+    ClickOutsideDirective
   ],
   imports: [
     BrowserModule,

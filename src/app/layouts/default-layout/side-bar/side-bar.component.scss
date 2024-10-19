@@ -1,0 +1,163 @@
+.sidebar {
+  background-color: #171c28;
+  height: 100%;
+  position: relative;
+  z-index: 2;
+
+  &__overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility, opacity;
+    transition-duration: 0.3s;
+  }
+
+  &.open ~ &__overlay {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  button {
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    outline: none;
+    border: none;
+  }
+
+  &__items {
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 56px;
+    transition: width 0.3s ease-in-out;
+
+    &.open {
+      animation: expand 0.3s ease-in-out forwards;
+      overflow: hidden;
+    }
+
+    &.close {
+      animation: scaleA 0.3s ease-in-out forwards;
+    }
+  }
+
+  &__menu-item {
+    position: relative;
+    padding: 6px 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transform: background-color, color, filter;
+    transition-duration: 0.3s;
+    cursor: pointer;
+
+    span {
+      color: #d4cece;
+      font-size: 20px;
+      line-height: 1.5;
+      font-weight: 400;
+      white-space: nowrap;
+      transform: visibility, opacity;
+      transition-duration: 0.3s;
+      visibility: hidden;
+      opacity: 0;
+
+      &.show {
+        visibility: visible;
+        opacity: 1;
+      }
+    }
+    
+    &--active,
+    &:hover {
+      background-color: #e53d01;
+      border-radius: 4px;
+      span {
+        color: #fff;
+      }
+
+      img {
+        filter: brightness(0) saturate(100%) invert(99%) sepia(74%) saturate(0%)
+          hue-rotate(184deg) brightness(116%) contrast(100%);
+      }
+    }
+
+   
+  }
+
+  &__tooltip {
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    color: #111113;
+    white-space: nowrap;
+    padding: 8px 6px;
+    border-radius: 4px;
+    transform: translate(24px, -50%);
+    filter: drop-shadow(0 0 4px rgba(200, 200, 200, 0.40));
+    background: #fff;
+    transition: visibility, opacity;
+    transition-duration: 0.3s;
+    visibility: hidden;
+    opacity: 0;
+
+    &::before {
+        position: absolute;
+        left: -14px;
+        top: 12px;
+        content: "";
+        border: 7px solid;
+        border-color: transparent #fff transparent transparent;
+    }
+  }
+
+  &__menu-item:first-child::after {
+    position: absolute;
+    left: 0;
+    bottom: -8px;
+    height: 1px;
+    width: 100%;
+    content: "";
+    background-color: #d4cece;
+  }
+
+  &__menu-item:hover &__tooltip {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  &__icon {
+    width: 24px;
+    height: 24px;
+    filter: brightness(0) saturate(100%) invert(87%) sepia(0%) saturate(592%)
+      hue-rotate(170deg) brightness(96%) contrast(92%);
+  }
+}
+
+/* Optional: Keyframes animation */
+@keyframes expand {
+  from {
+    width: 56px;
+  }
+  to {
+    width: 232px;
+  }
+}
+@keyframes scaleA {
+  from {
+    width: 232px;
+  }
+  to {
+    width: 56px;
+  }
+}

@@ -1,0 +1,46 @@
+<section
+  class="sidebar"
+  [class.open]="isOpen"
+  appClickOutside
+  (clickOutside)="clickOutsideMenu($event)"
+>
+  <div
+    class="sidebar__items"
+    [class.open]="isOpen"
+    [class.close]="isOpen !== null && isOpen === false"
+  >
+    <div (click)="toggleOpenMenu()" onkeydown="" class="sidebar__menu-item">
+      <button>
+        <img
+          class="sidebar__icon"
+          alt=""
+          src="../../../../assets/images/icons/bars.svg"
+        />
+      </button>
+      <span [class.show]="isOpen">LI</span>
+    </div>
+    <div
+      *ngFor="let item of menu"
+      (click)="navigateTo(item.routerLink)"
+      onkeydown=""
+      class="sidebar__menu-item"
+      [class.sidebar__menu-item--active]="
+        currentItemActivate.length > 0 &&
+        currentItemActivate[0].label === item.title
+      "
+    >
+      <button>
+        <img
+          class="sidebar__icon"
+          alt=""
+          [src]="'assets/images/icons/' + item.icon"
+        />
+      </button>
+      <span [class.show]="isOpen">{{ item.title }}</span>
+      <div class="sidebar__tooltip">
+        {{ item.title }}
+      </div>
+    </div>
+  </div>
+</section>
+<!-- <div onkeydown="" (click)="clickOutsideMenu()" class="sidebar__overlay"></div> -->

@@ -1,17 +1,1 @@
-<main class="main">
-  <h1>Dashboard</h1>
-  <div style="display: flex; gap: 8px; flex-wrap: wrap;" *ngIf="messages.length > 0">
-    <div style="padding: 8px; border-radius: 4px; background-color: #ddd;" *ngFor="let value of messages">{{value.code }}</div>
-  </div>
-
-  <form [formGroup]="formDashboard">
-    <label>
-      <input
-        type="text"
-        formControlName="network"
-        [checked]="interval === 1"
-      />
-      <div class="interval-option">Network</div>
-    </label>
-  </form>
-</main>
+<p>Dashboard</p>

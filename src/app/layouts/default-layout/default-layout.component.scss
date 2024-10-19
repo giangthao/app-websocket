@@ -1,0 +1,32 @@
+.default-layout{
+    display: flex;
+
+    &__left{
+        height: 100vh;
+        position: fixed;
+    left: 0;
+    top: 0;
+    }
+
+    &__content{
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        margin-left: 56px;
+    }
+
+    &__main{
+        height: calc(100% - 60px);
+        overflow-y: auto;
+        flex: 1;
+        padding: 24px;
+        background-color: #f3f3f3;
+
+        &--inner{
+            background-color: #fff;
+            border-radius: 4px;
+            min-height: 10000px;
+        }
+    }
+}
