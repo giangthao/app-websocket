@@ -24,9 +24,11 @@ export class ListLeaComponent {
 
     // Lưu trạng thái trước khi thay đổi
     this.previousState = this.items[index].checked;
+    
 
     // Tạm thời cập nhật trạng thái để hiện thị trên UI
     this.items[index].checked = inputElement.checked;
+    this.newState = inputElement.checked;
 
     // Lưu index hiện tại và mở popup xác nhận
     this.currentIndex = index;
