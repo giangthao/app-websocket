@@ -1,1 +1,30 @@
-<p>List LEA</p>
+<div>Filter</div>
+<div>Table</div>
+<!-- Toggle button -->
+<div style="margin-bottom: 30px">Toggle button</div>
+
+<div *ngFor="let item of items; let i = index">
+  <div>{{ item.name }}</div>
+  <div class="switch">
+    <input
+      type="checkbox"
+      name=""
+      [id]="item.name"
+      [checked]="item.checked"
+      (change)="onCheckboxChange($event, i)"
+    />
+    <label [for]="item.name" aria-label="Toggle Switch"></label>
+  </div>
+</div>
+
+<!-- Popup xác nhận -->
+<div class="overlay" *ngIf="isPopupOpen">
+  <div class="popup">
+    <h2>Xác nhận</h2>
+    <p>Bạn có chắc chắn muốn thay đổi không?</p>
+    <div class="popup-actions">
+      <button (click)="confirmChange()">Đồng ý</button>
+      <button (click)="cancelChange()">Hủy</button>
+    </div>
+  </div>
+</div>
