@@ -1,0 +1,311 @@
+<div class="overlay">
+  <div class="leamf-form popup">
+    <header class="leamf-form__header">
+      <h2 *ngIf="type === ADD">Add LEAMF</h2>
+      <h2 *ngIf="type === EDIT">Edit LEAMF</h2>
+      <button>x</button>
+    </header>
+    <form [formGroup]="formLeamf" class="leamf-form__form">
+      <!-- LEA id -->
+      <div class="form__group">
+        <div class="form__select">
+          <div class="form__control">
+            <label class="form__label" [htmlFor]=""
+              >LEA ID <span>*</span></label
+            >
+            <ng-select
+              [placeholder]="'Select LEA ID'"
+              [items]="listLea"
+              bindLabel="label"
+              bindValue="value"
+              formControlName="leaId"
+            >
+            </ng-select>
+          </div>
+        </div>
+        <!-- Error -->
+        <div
+          class="form__error"
+          *ngIf="
+            formLeamf.get('leaId')?.invalid &&
+            (formLeamf.get('leaId')?.dirty || formLeamf.get('leaId')?.touched)
+          "
+        >
+          <div *ngIf="formLeamf.get('leaId')?.errors?.required">
+            LEA ID is required.
+          </div>
+        </div>
+      </div>
+      <!-- LEAMF id -->
+      <div class="form__group">
+        <div class="form__control">
+          <label class="form__label" [htmlFor]=""
+            >LEAMF ID <span>*</span></label
+          >
+          <input
+            class="form__input"
+            placeholder="Enter LEAMF ID"
+            formControlName="leamfId"
+          />
+        </div>
+        <!-- Error -->
+        <div
+          class="form__error"
+          *ngIf="
+            formLeamf.get('leamfId')?.invalid &&
+            (formLeamf.get('leamfId')?.dirty ||
+              formLeamf.get('leamfId')?.touched)
+          "
+        >
+          <div
+            *ngIf="
+              formLeamf.get('leamfId')?.errors?.required ||
+              formLeamf.get('leamfId')?.errors?.whitespace
+            "
+          >
+            LEAMF ID is required.
+          </div>
+          <div *ngIf="formLeamf.get('leamfId')?.errors?.maxlength">
+            Maximum length is 255 characters.
+          </div>
+        </div>
+      </div>
+      <!-- Protocol group -->
+      <div class="form__group">
+        <label class="form__label" [htmlFor]="">Protocol <span>*</span></label>
+        <div class="form__row">
+          <!-- Protocol type -->
+          <div style="width: 180px" class="form__control">
+            <div class="form__select">
+              <ng-select
+                [placeholder]="'Select protocol type'"
+                [items]="PROTOCOL_TYPE"
+                bindLabel="label"
+                bindValue="value"
+                formControlName="protocolType"
+              ></ng-select>
+            </div>
+            <!-- Error -->
+            <div
+              class="form__error"
+              *ngIf="
+                formLeamf.get('protocolType')?.invalid &&
+                (formLeamf.get('protocolType')?.dirty ||
+                  formLeamf.get('protocolType')?.touched)
+              "
+            >
+              <div *ngIf="formLeamf.get('protocolType')?.errors?.required">
+                Protocol Type is required.
+              </div>
+            </div>
+          </div>
+          <!-- Protocol value -->
+          <div style="flex: 1" class="form__control">
+            <div class="form__select">
+              <ng-select
+                [placeholder]="'Select protocol value'"
+                [items]="protocolValue"
+                bindLabel="label"
+                bindValue="value"
+                formControlName="protocolValue"
+              ></ng-select>
+            </div>
+            <!-- Error -->
+            <div
+              class="form__error"
+              *ngIf="
+                formLeamf.get('protocolValue')?.invalid &&
+                (formLeamf.get('protocolValue')?.dirty ||
+                  formLeamf.get('protocolValue')?.touched)
+              "
+            >
+              <div *ngIf="formLeamf.get('protocolValue')?.errors?.required">
+                Protocol Value is required.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- IP -->
+      <div class="form__group">
+        <div class="form__row">
+          <!-- IP address -->
+          <div style="flex: 1" class="form__group">
+            <div class="form__control">
+              <label class="form__label" [htmlFor]="'octet1'"
+                >IP Address <span>*</span></label
+              >
+              <div formGroupName="ipAddress" class="form__ip-address">
+                <input
+                  maxlength="3"
+                  placeholder="000"
+                  formControlName="octet1"
+                  id="octet1"
+                  (keydown)="handleOctetKeydownEvent($event, 'octet1')"
+                  (input)="onOctetChange($event, 'octet2')"
+                  (click)="handleOctetClick($event)"
+                  autocomplete="off"
+                />
+                <span class="form__dot">.</span>
+                <input
+                  maxlength="3"
+                  id="octet2"
+                  placeholder="000"
+                  formControlName="octet2"
+                  (keydown)="handleOctetKeydownEvent($event, 'octet2')"
+                  (input)="onOctetChange($event, 'octet3')"
+                  (click)="handleOctetClick($event)"
+                  autocomplete="off"
+                />
+                <span class="form__dot">.</span>
+                <input
+                  placeholder="000"
+                  maxlength="3"
+                  id="octet3"
+                  formControlName="octet3"
+                  (keydown)="handleOctetKeydownEvent($event, 'octet3')"
+                  (input)="onOctetChange($event, 'octet4')"
+                  (click)="handleOctetClick($event)"
+                  autocomplete="off"
+                />
+                <span class="form__dot">.</span>
+                <input
+                  placeholder="000"
+                  maxlength="3"
+                  id="octet4"
+                  formControlName="octet4"
+                  (keydown)="handleOctetKeydownEvent($event, 'octet4')"
+                  (click)="handleOctetClick($event)"
+                  autocomplete="off"
+                  style="flex: 1"
+                />
+              </div>
+            </div>
+            <!-- Error -->
+            <div
+              class="form__error"
+              *ngIf="
+                ipAddressFormGroup.get('octet1')?.invalid &&
+                (ipAddressFormGroup.get('octet1')?.dirty ||
+                  ipAddressFormGroup.get('octet1')?.touched)
+              "
+            >
+              <div
+                *ngIf="
+                  ipAddressFormGroup.get('octet1')?.errors?.required ||
+                  ipAddressFormGroup.get('octet1')?.errors?.whitespace
+                "
+              >
+                IP Address is required.
+              </div>
+              <div
+                *ngIf="ipAddressFormGroup.get('octet1')?.errors?.invalidOctet"
+              >
+                Octer must be between 0 - 255
+              </div>
+            </div>
+          </div>
+          <!-- Port -->
+          <div style="margin-top: 0; width: 140px" class="form__group">
+            <div class="form__control">
+              <label class="form__label" [htmlFor]=""
+                >Port <span>*</span></label
+              >
+              <input
+                placeholder="0000"
+                class="form__input"
+                formControlName="port"
+                [maxlength]="'4'"
+                [minlength]="'1'"
+              />
+            </div>
+            <!-- Error -->
+            <div
+              class="form__error"
+              *ngIf="
+                formLeamf.get('port')?.invalid &&
+                (formLeamf.get('port')?.dirty || formLeamf.get('port')?.touched)
+              "
+            >
+              <div
+                *ngIf="
+                  formLeamf.get('port')?.errors?.required ||
+                  formLeamf.get('port')?.errors?.whitespace
+                "
+              >
+                Port is required.
+              </div>
+              <div *ngIf="formLeamf.get('port')?.errors?.invalidPort">
+                Port must be between 0 - 9999
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- FTP/ROSE -->
+      <div style="margin-top: 16px" *ngIf="isFtpOrRoseProtocol">
+        <!-- Destination path -->
+        <div class="form__group">
+          <div class="form__control">
+            <label class="form__label" [htmlFor]=""
+              >Destination Path <span>*</span></label
+            >
+            <input
+              placeholder="Enter destination path"
+              class="form__input"
+              formControlName="destinationPath"
+            />
+          </div>
+          <!-- Error -->
+          <div
+            class="form__error"
+            *ngIf="
+              formLeamf.get('destinationPath')?.invalid &&
+              (formLeamf.get('destinationPath')?.dirty ||
+                formLeamf.get('destinationPath')?.touched)
+            "
+          >
+            <div
+              *ngIf="
+                formLeamf.get('destinationPath')?.errors?.required ||
+                formLeamf.get('destinationPath')?.errors?.whitespace
+              "
+            >
+              Destination Path is required.
+            </div>
+            <div *ngIf="formLeamf.get('destinationPath')?.errors?.maxlength">
+              Maximum length is 255 characters.
+            </div>
+          </div>
+        </div>
+        <!-- Username -->
+        <div class="form__group">
+          <div class="form__control">
+            <label class="form__label" [htmlFor]="">Username</label>
+            <input
+              class="form__input"
+              placeholder="Enter username"
+              formControlName="username"
+            />
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="form__group">
+          <div class="form__control">
+            <label [htmlFor]="" class="form__label">Password</label>
+            <input
+              class="form__input"
+              placeholder="Enter password"
+              formControlName="password"
+            />
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="leamf-form__actions popup-actions">
+      <button>Cancel</button>
+      <button>Save</button>
+    </div>
+  </div>
+</div>

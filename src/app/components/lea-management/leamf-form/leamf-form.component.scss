@@ -1,0 +1,101 @@
+.leamf-form {
+  &__header {
+    border-bottom: 1px solid #ddd;
+    padding: 20px 20px 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    h2 {
+      font-size: 20px;
+      font-weight: 500;
+    }
+
+    button {
+      height: 24px;
+      width: 24px;
+      border-radius: 4px;
+      border: none;
+    }
+  }
+
+  &__form {
+    padding: 16px 20px;
+    max-height: 526px;
+    overflow-y: auto;
+  }
+
+  &__actions {
+    border-top: 1px solid #ddd;
+    padding: 16px 20px 20px 20px;
+    justify-content: flex-end;
+  }
+}
+
+// Form
+.form {
+  &__group + &__group {
+    margin-top: 16px;
+  }
+
+  &__row {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  &__label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 18px;
+    color: #111113;
+
+    span {
+      color: red;
+    }
+  }
+
+  &__input {
+    height: 36px;
+    width: 100%;
+    padding: 0 10px;
+    outline: none;
+    border: 1px solid #ddd;
+    font-family: inherit;
+    font-size: 15px;
+    border-radius: 4px;
+  }
+
+  &__ip-address{
+    display: flex;
+    align-items: center;
+    height: 32px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding-left: 10px;
+    input {
+        border: none;
+        outline: none;
+        font-size: 15px;
+        height: 100%;
+        width: calc(24px + 8px);
+        padding-right: 4px;
+        padding-left: 4px;
+    }
+    input:not(:nth-child(1)) {
+        padding-left: 4px;
+    }
+    input:nth-child(1) {
+        width: calc(24px + 8px);
+    }
+  }
+
+  &__dot{
+    display: block;
+  }
+
+  &__error{
+    color: red;
+    font-size: 14px;
+  }
+}

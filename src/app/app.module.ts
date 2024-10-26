@@ -15,6 +15,8 @@ import { AddLeaComponent } from './components/lea-management/add-lea/add-lea.com
 import { ClickOutsideDirective } from './directives/click-outside.directive';
 import { BreadcrumbComponent } from './layouts/default-layout/top-bar/breadcrumb/breadcrumb.component';
 import { ListLeaComponent } from './components/lea-management/list-lea/list-lea.component';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { LeamfFormComponent } from './components/lea-management/leamf-form/leamf-form.component';
 
 @NgModule({
   declarations: [
@@ -28,14 +30,16 @@ import { ListLeaComponent } from './components/lea-management/list-lea/list-lea.
     AddLeaComponent,
     ClickOutsideDirective,
     BreadcrumbComponent,
-    ListLeaComponent
+    ListLeaComponent,
+    LeamfFormComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgSelectModule
   ],
   providers: [WebSocketService],
   bootstrap: [AppComponent]
