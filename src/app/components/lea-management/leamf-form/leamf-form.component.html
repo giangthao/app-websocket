@@ -15,10 +15,12 @@
             >
             <ng-select
               [placeholder]="'Select LEA ID'"
-              [items]="listLea"
+              [items]="availableLeaItems"
               bindLabel="label"
               bindValue="value"
               formControlName="leaId"
+              [closeOnSelect]="false"
+              [multiple]="true"
             >
             </ng-select>
           </div>

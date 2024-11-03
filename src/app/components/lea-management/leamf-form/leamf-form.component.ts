@@ -33,6 +33,8 @@ export class LeamfFormComponent implements OnInit {
   listLea: any[] = fakeLeaList;
   isFtpOrRoseProtocol = true;
 
+  availableLeaItems: any[] = [...this.listLea];
+
   constructor(private readonly leamfManagementService: LeamfManagementService) {
     this.formLeamf = new FormGroup({
       leaId: new FormControl(null, {
@@ -100,6 +102,15 @@ export class LeamfFormComponent implements OnInit {
 
     this.formLeamf.valueChanges.subscribe((value) => {
       console.log(value);
+    });
+
+    this.formLeamf.get('leaId')?.valueChanges.subscribe((value) => {
+      console.log('lea select change', value);
+      // Cập nhật danh sách các mục có thể chọn
+      this.availableLeaItems = this.listLea.filter(
+        (item) => !value.some((selected: any) => selected === item.value)
+      );
+      console.log(this.availableLeaItems)
     });
 
     this.formLeamf.get('protocolValue')?.valueChanges.subscribe((value) => {
@@ -240,7 +251,7 @@ export class LeamfFormComponent implements OnInit {
     }
   }
 
-  get ipAddressFormGroup() : FormGroup {
+  get ipAddressFormGroup(): FormGroup {
     return this.formLeamf.get('ipAddress') as FormGroup;
   }
 
