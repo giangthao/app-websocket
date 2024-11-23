@@ -138,72 +138,40 @@
                 >IP Address <span>*</span></label
               >
               <div formGroupName="ipAddress" class="form__ip-address">
-                <input
-                  maxlength="3"
-                  placeholder="000"
-                  formControlName="octet1"
-                  id="octet1"
-                  (keydown)="handleOctetKeydownEvent($event, 'octet1')"
-                  (input)="onOctetChange($event, 'octet2')"
-                  (click)="handleOctetClick($event)"
-                  autocomplete="off"
-                />
-                <span class="form__dot">.</span>
-                <input
-                  maxlength="3"
-                  id="octet2"
-                  placeholder="000"
-                  formControlName="octet2"
-                  (keydown)="handleOctetKeydownEvent($event, 'octet2')"
-                  (input)="onOctetChange($event, 'octet3')"
-                  (click)="handleOctetClick($event)"
-                  autocomplete="off"
-                />
-                <span class="form__dot">.</span>
-                <input
-                  placeholder="000"
-                  maxlength="3"
-                  id="octet3"
-                  formControlName="octet3"
-                  (keydown)="handleOctetKeydownEvent($event, 'octet3')"
-                  (input)="onOctetChange($event, 'octet4')"
-                  (click)="handleOctetClick($event)"
-                  autocomplete="off"
-                />
-                <span class="form__dot">.</span>
-                <input
-                  placeholder="000"
-                  maxlength="3"
-                  id="octet4"
-                  formControlName="octet4"
-                  (keydown)="handleOctetKeydownEvent($event, 'octet4')"
-                  (click)="handleOctetClick($event)"
-                  autocomplete="off"
-                  style="flex: 1"
-                />
+                <ng-container *ngFor="let octet of octetIds; let i = index">
+                  <input
+                    maxlength="3"
+                    placeholder="000"
+                    [formControlName]="octet"
+                    [id]="octet"
+                    (keydown)="handleOctetKeydownEvent($event, octet)"
+                    (input)="onOctetChange($event, octetIds[i + 1] || null)"
+                    (focus)="handleFocus(octet)"
+                    (blur)="handleBlur(octet)"
+                    (click)="handleOctetClick($event)"
+                    autocomplete="off"
+                    [style.flex]="i === octetIds.length - 1 ? '1' : null"
+                  />
+                  <span class="form__dot" *ngIf="i < octetIds.length - 1"
+                    >.</span
+                  >
+                </ng-container>
               </div>
             </div>
             <!-- Error -->
-            <div
-              class="form__error"
-              *ngIf="
-                ipAddressFormGroup.get('octet1')?.invalid &&
-                (ipAddressFormGroup.get('octet1')?.dirty ||
-                  ipAddressFormGroup.get('octet1')?.touched)
-              "
-            >
-              <div
-                *ngIf="
-                  ipAddressFormGroup.get('octet1')?.errors?.required ||
-                  ipAddressFormGroup.get('octet1')?.errors?.whitespace
-                "
-              >
+            <div class="form__error">
+              <div *ngIf="ipAddressTouchedAndEmpty">
                 IP Address is required.
               </div>
               <div
-                *ngIf="ipAddressFormGroup.get('octet1')?.errors?.invalidOctet"
+                *ngIf="
+                  ipAddressFormGroup.get('octet1')?.errors?.invalidOctet ||
+                  ipAddressFormGroup.get('octet2')?.errors?.invalidOctet ||
+                  ipAddressFormGroup.get('octet3')?.errors?.invalidOctet ||
+                  ipAddressFormGroup.get('octet4')?.errors?.invalidOctet
+                "
               >
-                Octer must be between 0 - 255
+                Every octet must be between 0 - 255
               </div>
             </div>
           </div>

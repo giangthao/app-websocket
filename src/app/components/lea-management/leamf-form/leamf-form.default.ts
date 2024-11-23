@@ -100,3 +100,10 @@ export const fakeLeaList = [
     value: 'LEA 8'
   }
 ]
+
+export enum Octet {
+  Octet1 = 'octet1',
+  Octet2 = 'octet2',
+  Octet3 = 'octet3',
+  Octet4 = 'octet4',
+}

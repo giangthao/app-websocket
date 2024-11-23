@@ -10,8 +10,14 @@ import {
   FTP,
   allowedKeys,
   fakeLeaList,
+  Octet,
 } from './leamf-form.default';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormBuilder,
+  Validators,
+} from '@angular/forms';
 import { LeamfManagementService } from 'src/app/services/leamf-management.service';
 
 @Component({
@@ -25,6 +31,7 @@ export class LeamfFormComponent implements OnInit {
   ADD = TypeLeamfForm.add;
   EDIT = TypeLeamfForm.edit;
   PROTOCOL_TYPE = type;
+  Octet = Octet;
   protocolValue: { label: string; value: string }[] = [];
 
   formLeamf: FormGroup;
@@ -35,7 +42,21 @@ export class LeamfFormComponent implements OnInit {
 
   availableLeaItems: any[] = [...this.listLea];
 
-  constructor(private readonly leamfManagementService: LeamfManagementService) {
+  // handle required ip address
+  ipAddressTouchedAndEmpty = false;
+  octetFocusStatus: Record<Octet, boolean> = {
+    [Octet.Octet1]: false,
+    [Octet.Octet2]: false,
+    [Octet.Octet3]: false,
+    [Octet.Octet4]: false,
+  };
+  octetIds = Object.values(Octet);
+  // end handle required ip address
+
+  constructor(
+    private readonly leamfManagementService: LeamfManagementService,
+    private readonly fb: FormBuilder
+  ) {
     this.formLeamf = new FormGroup({
       leaId: new FormControl(null, {
         validators: Validators.compose([Validators.required]),
@@ -52,32 +73,23 @@ export class LeamfFormComponent implements OnInit {
       protocolValue: new FormControl(null, {
         validators: Validators.compose([Validators.required]),
       }),
-      ipAddress: new FormGroup({
-        octet1: new FormControl(null, {
-          validators: Validators.compose([
-            Validators.required,
-            this.leamfManagementService.octerValidator(),
-          ]),
-        }),
-        octet2: new FormControl(null, {
-          validators: Validators.compose([
-            Validators.required,
-            this.leamfManagementService.octerValidator(),
-          ]),
-        }),
-        octet3: new FormControl(null, {
-          validators: Validators.compose([
-            Validators.required,
-            this.leamfManagementService.octerValidator(),
-          ]),
-        }),
-        octet4: new FormControl(null, {
-          validators: Validators.compose([
-            Validators.required,
-            this.leamfManagementService.octerValidator(),
-          ]),
-        }),
-      }),
+      ipAddress: this.fb.group(
+        this.octetIds.reduce(
+          (acc, octet) => ({
+            ...acc,
+            [octet]: [
+              null,
+              {
+                validators: Validators.compose([
+                  Validators.required,
+                  this.leamfManagementService.octerValidator(),
+                ]),
+              },
+            ],
+          }),
+          {}
+        )
+      ),
       port: new FormControl(null, {
         validators: Validators.compose([
           Validators.required,
@@ -110,7 +122,7 @@ export class LeamfFormComponent implements OnInit {
       this.availableLeaItems = this.listLea.filter(
         (item) => !value.some((selected: any) => selected === item.value)
       );
-      console.log(this.availableLeaItems)
+      console.log(this.availableLeaItems);
     });
 
     this.formLeamf.get('protocolValue')?.valueChanges.subscribe((value) => {
@@ -152,7 +164,67 @@ export class LeamfFormComponent implements OnInit {
     });
   }
 
-  onOctetChange(event: Event, nextId: string) {
+  // HANDLE REQUIRED IP ADDRESS
+  handleFocus(octet: Octet) {
+    this.octetFocusStatus[octet] = true;
+    this.checkIpAddressValidity();
+  }
+
+  handleBlur(octet: Octet) {
+    this.octetFocusStatus[octet] = false;
+    this.checkIpAddressValidity();
+  }
+
+  isAnyOctetFocused(): boolean {
+    return Object.values(this.octetFocusStatus).some((status) => status);
+  }
+
+  areAllOctetsEmpty(): boolean {
+    const ipAddressGroup = this.formLeamf.get('ipAddress')!;
+    return Object.values(ipAddressGroup.value).every((val) => !val);
+  }
+
+  checkIpAddressValidity(): void {
+    const ipAddressGroup = this.formLeamf.get('ipAddress')!;
+    const allValues = Object.values(ipAddressGroup.value);
+    this.ipAddressTouchedAndEmpty =
+      allValues.every((val) => !val) && !this.isAnyOctetFocused();
+  }
+
+  handleOctetClick(event: any): void {
+    this.formLeamf.get('ipAddress')?.markAsTouched();
+
+    // Tìm octet trống đầu tiên
+    const firstEmptyOctet = this.octetIds.find((octet) => {
+      return !this.formLeamf.get(['ipAddress', octet])?.value;
+    });
+
+    // Nếu tìm thấy, focus vào ô đó
+    if (firstEmptyOctet) {
+      this.setFocusTo(firstEmptyOctet);
+    }
+  }
+
+  setFocusTo(octet: Octet): void {
+    const octetElement = document.getElementById(octet) as HTMLInputElement;
+    octetElement?.focus();
+    this.handleFocus(octet);
+  }
+
+  getPreviousInputId(currentId: string): string {
+    const index = this.octetIds.indexOf(currentId as Octet);
+    return index > 0 ? this.octetIds[index - 1] : this.octetIds[0];
+  }
+
+  getNextInputId(currentId: string): string {
+    const index = this.octetIds.indexOf(currentId as Octet);
+    return index >= 0 && index < this.octetIds.length - 1
+      ? this.octetIds[index + 1]
+      : this.octetIds[this.octetIds.length - 1];
+  }
+  // END HANDLE REQUIRED IP ADDRESS
+
+  onOctetChange(event: Event, nextId: any) {
     const inputElement = event.target;
     if (inputElement instanceof HTMLInputElement) {
       const width =
@@ -161,36 +233,12 @@ export class LeamfFormComponent implements OnInit {
           : 24 + 8;
       inputElement.style.width = `${width}px`;
 
-      if (inputElement.value.length === 3) {
+      if (inputElement.value.length === 3 && nextId) {
         const nextInput = document.getElementById(nextId) as HTMLInputElement;
         setTimeout(() => {
           nextInput.focus();
           nextInput.setSelectionRange(0, 0);
         }, 0);
-      }
-    }
-  }
-
-  handleOctetClick(event: any): void {
-    if (
-      !this.ipAddressFormGroup.get('octet1')?.value &&
-      !this.ipAddressFormGroup.get('octet2')?.value &&
-      !this.ipAddressFormGroup.get('octet3')?.value &&
-      !this.ipAddressFormGroup.get('octet4')?.value
-    ) {
-      const firstOctet = document.getElementById('octet1') as HTMLInputElement;
-      firstOctet.focus();
-      return;
-    }
-
-    if (!event.target.value) {
-      for (let i = 1; i < 5; i++) {
-        const tmpId = 'octet' + String(i);
-        const octetElement = document.getElementById(tmpId) as HTMLInputElement;
-        if (!octetElement?.value) {
-          octetElement.focus();
-          return;
-        }
       }
     }
   }
@@ -253,33 +301,5 @@ export class LeamfFormComponent implements OnInit {
 
   get ipAddressFormGroup(): FormGroup {
     return this.formLeamf.get('ipAddress') as FormGroup;
-  }
-
-  private getPreviousInputId(currentId: string): string {
-    switch (currentId) {
-      case 'octet2':
-        return 'octet1';
-      case 'octet3':
-        return 'octet2';
-      case 'octet4':
-        return 'octet3';
-      default:
-        return 'octet1';
-    }
-  }
-
-  private getNextInputId(currentId: string): string {
-    switch (currentId) {
-      case 'octet1':
-        return 'octet2';
-      case 'octet2':
-        return 'octet3';
-      case 'octet3':
-        return 'octet4';
-      case 'octet4':
-        return 'octet4';
-      default:
-        return 'octet1';
-    }
   }
 }
